@@ -1,0 +1,396 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>The Whistle Game</title>
+    <style>
+		
+		#container {
+			overflow: hidden;
+			width: 1500px;
+		}
+
+		#inner {
+		  overflow: hidden;
+		  width: 100%;
+		}
+
+		div.child {
+			float: left;
+			width: 50%;
+			padding-left: 0;
+			padding-right: 0;
+			margin-left: auto;
+			margin-right: auto;
+			display: block;
+			width: 800px;
+		}
+		
+	div.absolute {
+		position: absolute;
+		top: 541px;
+		left:585px;
+	}
+
+		#note { font-size: 20px; }
+		.droptarget { background-color: #348781}
+		div.confident {
+			color: black; 
+		}
+		div.vague {
+			color: lightgrey; 
+		}
+		#note {
+			display: inline-block; 
+			height:18px; 
+			text-align: left;
+		}
+
+		#detector {
+			width: 80px; 
+			height: 60px; 
+			border: 4px solid gray; 
+			border-radius: 8px; 
+			text-align: center; 
+			padding-top: 3px;
+			background-color: white;
+		}
+		
+		#output { width: 30px; height: 42px; }
+		#flat { display: none; }
+		#sharp { display: none; }
+		.flat #flat { display: inline; }
+		.sharp #sharp { display: inline; }
+		* { 
+			padding: 0; 
+			margin: 0; 
+		}
+    	canvas { 
+			background: #eee; 
+			display: block; 
+		}
+		
+		
+		button {
+  			margin-top: 20px;
+  			line-height: 60px;
+			width: 250px;
+  			background: black;
+  			border: none;
+			color: white;
+		}
+		button:hover {
+		  background: gray;
+		}
+    </style>
+</head>
+<body>
+
+		<canvas id="myCanvas" width="680" height="620"></canvas>
+		<button id="lowStart" onclick="startGame()" style = "position:absolute;
+			transition: .5s ease;
+			top: 250px;
+			left: 220px;
+			"> Start Game
+		</button>
+		</button>
+		<h1 id="score" style = "position:absolute;
+			top: 50px;
+			font-size: 62px;
+			left: 50px;
+			color: white;
+			text-shadow:
+				-1px -1px 0 #000, 1px -1px 0 #000,
+				-1px 1px  0 #000, 1px  1px 0 #000;">
+			THE WHISTLE GAME
+		</h1>
+    <div class="absolute">
+		<script src="js/pitchdetect.js"></script>
+		<div id="detector" class="vague">
+			<div class="pitch"><span id="pitch">--</span>Hz</div>
+			<div class="note"><span id="note">--</span></div>  
+			<div id="detune">
+				<span id="detune_amt">--</span>
+				
+				<span id="flat">cents &#9837;</span>
+				<span id="sharp">cents &#9839;</span>
+			</div>
+		</div>
+	</div>
+
+<script>
+	//Getting the canvas in 2d
+	var canvas = document.getElementById("myCanvas");
+	//canvas.width = document.body.clientWidth; //document.width is obsolete
+    //canvas.height = document.body.clientHeight; //document.height is obsolete
+	var ctx = canvas.getContext("2d");
+	var gameInterval;
+	var listInterval;
+	//var scoreCanvas = document.getElementById("scoreBoard");
+	//var stx = scoreCanvas.getContext("2d");
+	//stx.fillText()
+	var freq = document.getElementById("pitch");
+	var note = document.getElementById("note");
+	var detune = document.getElementById("detune");
+	var detuneAmt = document.getElementById("detune_amt");
+	var score = document.getElementById("score");
+	score.innerHTML = "THE WHISTLE GAME";
+	score.style.fontFamily = "Impact,Charcoal,sans-serif";
+	
+	var button1 = document.getElementById("lowStart");
+	button1.style.fontFamily = "Impact,Charcoal,sans-serif";
+	button1.style.fontSize = "xx-large";
+	
+	//var button2 = document.getElementById("highStart");
+	//button2.style.fontFamily = "Impact,Charcoal,sans-serif";
+	//button2.style.fontSize = "xx-large";
+	
+	var curFreq = 0;
+	//Global Constants
+	var dx = -2; //game speed
+	var blockList = [];
+	var currentScoreInterval = 3000;
+	var y_pos = canvas.height/2; //Initial Value
+	var dy_pos = 0; //Initial Value
+	var speed = 3;
+    var x_pos = canvas.width/6;
+	
+	var range_max;
+	var range_min;
+	var multiplier;
+	
+	var dict1 = {}; // create an empty array
+	var dict = {};
+	var thomas = ["G", "A", "B", "C", "C", "D", "E", "E", "G#" ]
+	var noteStrings = ["G", "G#", "A", "A#", "B", "C", "C#", "D","D#", "E", "F", "F#"];
+	var noteVal = [500, 460, 420, 380, 340, 300, 260, 220, 180, 140, 100, 60];
+	var posVal = [600, 550, 500, 450, 400, 350, 300, 250, 200, 150, 100, 50];
+	var aBuffer = [300, 300, 300, 300, 300];
+	var pointer = 0;
+	var gameLength = thomas.length;
+	var gamePointer = 0;
+	var gameProgress = 0;
+    var curScore = 0;
+
+    var img = document.createElement("IMG");
+    img.setAttribute("src", "marypoppins.png");
+    img.setAttribute("width", "60px");
+    img.setAttribute("height", "60px");
+    //img.width = "30";
+    //img.height = "30";
+    //img.setAttribute()
+
+	for(var i = 0; i < noteStrings.length; i++){
+		dict[noteStrings[i]] = noteVal[i];
+		dict1[noteStrings[i]] = posVal[i];
+	}
+	
+	function setScore(){
+		score.innerHTML = curScore;
+		curScore++;
+	}
+	
+	function move(dir){
+		if(dir == 'up'){
+			dy_pos = -speed;
+		}
+		if(dir == 'down'){
+			dy_pos = speed;			
+		}
+		if(dir == 'stop'){
+			dy_pos = 0;
+		}
+	}
+	
+    window.onkeydown = function (e) {
+    	var code = e.keyCode ? e.keyCode : e.which;
+    	if (code === 38) { //up key
+        	move('up');
+			
+			
+    	} else if (code === 40) { //down key
+        	move('down');
+    	}
+	};
+	window.onkeyup = function (e) {
+    	var code = e.keyCode ? e.keyCode : e.which;
+    	move('stop');
+	};
+	ctx.set
+	
+	function loseGame(){
+		window.clearInterval(gameInterval);
+		window.clearInterval(listInterval);
+		window.clearInterval(scoreInterval);
+		window.clearInterval(changeScoreInterval);
+		var button1 = document.createElement("button");
+		button1.innerHTML = "Retry";
+		button1.style.fontFamily = "Impact,Charcoal,sans-serif";
+		button1.style.fontSize = "xx-large";
+
+		var body = document.getElementsByTagName("body")[0];
+		body.appendChild(button1);
+		button1.style.position = "absolute";
+		button1.style.top = "250px";
+		button1.style.left = "220px";
+		button1.addEventListener ("click", function() {
+			blockList = [];
+			curScore = 0;
+			currentScoreInterval = 3000;
+			score.innerHTML = curScore;
+			button1.parentNode.removeChild(button1);
+			startGame();
+		});
+	}
+	
+	function checkCollision(){
+		var len = blockList.length;
+		
+		for(var i = 0; i < len; i++){
+			
+			var height = blockList[i]['height'];
+			var width = blockList[i]['width'];
+			var x = blockList[i]['x_pos'];
+			var thick = blockList[i]['thick_y'];
+			
+			var max_x = x;
+			var min_x = x - 40;
+			var max_y = height + img.height + 70;
+			var min_y = height - 10 ;
+			
+			
+			if((x_pos > min_x && x_pos < max_x) && (y_pos < min_y || y_pos > max_y)){
+				loseGame();
+			}
+		}
+		
+			
+	}
+	
+	//startGame();
+	//Creates a block
+	function create(x, y){
+		var blockObj = {}
+		blockObj['height'] = y;
+		blockObj['width'] = x;
+		blockObj['x_pos'] = canvas.width;
+		blockObj['thick_y'] = 200;
+		return blockObj;
+	}
+	
+	//Adds a block object to the list
+	function addToList(){
+		var randNum = Math.floor(Math.random() *500);
+		blockList.push(create(50,randNum));
+	}
+	
+	//Adds 
+
+	//TODO eliminate object as it leaves the screen
+    function deleteBlocks() {
+        if (!blockList[0]) return;
+		if(blockList[0]['x_pos'] < 5) {
+			blockList.shift();
+		}
+	}
+	
+	//drawing on the screen
+	function draw(){
+		
+		
+		//Create object as it comes into the screen
+		//TODO position should correspond to note
+		
+		ctx.clearRect(0,0, canvas.width, canvas.height);
+		ctx.beginPath();
+
+		var len = blockList.length;
+		for(var i = 0; i < len; i++){
+			var height = blockList[i]['height'];
+			var width = blockList[i]['width'];
+			var x = blockList[i]['x_pos'];
+			var thick = blockList[i]['thick_y'];
+			ctx.rect(x, 0, width, height);
+			ctx.rect(x, height + thick, width , canvas.height - height - thick);
+			ctx.fillStyle = "#black";
+			ctx.fill();
+			blockList[i]['x_pos'] += dx;
+		}
+        ctx.drawImage(img, x_pos, y_pos, 80, 80);
+    	ctx.fill();
+		if((y_pos < 600 && dy_pos > 0)|| (y_pos > 20 && dy_pos < 0)) y_pos += dy_pos;
+		
+		ctx.closePath();
+		deleteBlocks();
+		checkCollision();
+		
+		
+		
+	}
+	/*
+    function myFunction() {
+    var x = document.createElement("IMG");
+    x.setAttribute("src", "img_pulpit.jpg");
+    x.setAttribute("width", "304");
+    x.setAttribute("height", "228");
+    x.setAttribute("alt", "The Pulpit Rock");
+    document.body.appendChild(x);
+}
+    */
+	function calcAvgBuffer(){
+		var sum = 0;
+		for(var i = 0; i < aBuffer.length; i++){
+			sum += aBuffer[i];
+		} 
+		//alert(sum/5);
+		return sum/aBuffer.length;
+	}
+	
+	function sampleFreq(){
+		if(freq.innerHTML != '--'){
+			aBuffer[pointer] = 1000 - Math.floor(parseInt(freq.innerHTML)/2);
+			pointer = (pointer+1)%aBuffer.length;
+			y_pos = calcAvgBuffer();
+			if(y_pos<20) y_pos = 20;
+			if(y_pos>520) y_pos = 520;
+		}
+		//alert);
+		
+//		if(detuneAmt.innerHTML!= "--"){
+//			var offset = parseInt(detuneAmt.innerHTML);
+//			if(detune.className == "sharp") offset = -offset;
+//			aBuffer[pointer] = dict1[note.innerHTML] + offset;
+//			pointer = (pointer+1)%aBuffer.length;
+//			if(note.innerHTML != '-') y_pos = calcAvgBuffer();
+//		}
+	}
+	
+	function setScoreInterval(){
+		window.clearInterval(scoreInterval);
+		if(currentScoreInterval >= 300) currentScoreInterval -= 150;
+		scoreInterval = setInterval(setScore, currentScoreInterval);
+	}
+	
+	function startGame(){
+		gameInterval = setInterval(draw, 10);
+		freqInterval = setInterval(sampleFreq, 50);
+		listInterval = setInterval(addToList, 1500);
+		scoreInterval = setInterval(setScore, currentScoreInterval);
+		changeScoreInterval = setInterval(setScoreInterval, 3000);
+		//var elem = document.getElementById('highStart');
+    	//elem.parentNode.removeChild(elem);
+		elem = document.getElementById('lowStart');
+    	elem.parentNode.removeChild(elem);
+		toggleLiveInput();
+		score.style.left = "320px";
+		setScore();
+    	return false;
+	}
+
+	
+	
+
+</script>
+
+</body>
+</html>

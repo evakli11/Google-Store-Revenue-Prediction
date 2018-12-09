@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+* {box-sizing: border-box}
+body {
+	font-family: "Lato", 
+	sans-serif;
+	background-color: white;
+}
+
+/* Style the tab */
+div.tab {
+    float: left;
+    border: 1px solid #ccc;
+    background-color: #fffff;
+    width: 20%;
+    height: 95%;
+	position: fixed;
+	text-indent: 10px;
+}
+
+/* Style the buttons inside the tab */
+div.tab button {
+    display: block;
+    background-color: #f1f1f1;
+    color: black;
+    padding: 22px 16px;
+    width: 100%;
+    border: none;
+    outline: none;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+div.tab button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current "tab button" class */
+div.tab button.active {
+    background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+    float: left;
+    padding: 0px 12px;
+    border: none;
+    width: 80%;
+    border-left: none;
+    height: 100%;
+	padding-left: 22%;
+	-webkit-animation: fadeEffect 1s;
+	animation: fadeEffect 1s;
+}
+
+	/* Fade in tabs */
+	@-webkit-keyframes fadeEffect {
+		from {opacity: 0;}
+		to {opacity: 1;}
+	}
+
+	@keyframes fadeEffect {
+		from {opacity: 0;}
+		to {opacity: 1;}
+	}
+</style>
+</head>
+<body>
+
+<div class="tab">
+  <h2> Project/Work List </h2>
+  <button class="tablinks" onclick="openTab(event, 'Piano')" id="defaultOpen"><b>Piano Clicker</b></button>
+  <button class="tablinks" onclick="openTab(event, 'Biophysics')"><b>Bio-Physics Research</b></button>
+  <button class="tablinks" onclick="openTab(event, 'Teaching')"><b>Teaching</b></button>
+  <button class="tablinks" onclick="openTab(event, 'Robots')"><b>Robots</b></button>
+  <button class="tablinks" onclick="openTab(event, 'FPiano')"><b>Flappy Piano</b></button>
+</div>
+
+<div id="Piano" class="tabcontent">
+	<h2>Piano Clicker (Name of Game)</h2>
+	<p> 
+		I spent my childhood in front of the XBox 360 for hours on end. Now as a college student, I lament the
+		thousands of hours wasted on shooting Brutes in Halo 3 and sometimes wonder where I would be in life 
+		if I used those hours to learn a useful skill.
+	</p>
+	<p>
+		But perhaps it wasn't all to waste. What never ceases to amaze me is my concentration with video games. 
+		Though most people couldn't stay focused on writing that 1000-word english essay for more than 15 minutes
+		at a time, my video gaming sessions usually go on for 5-6 hours. Mind you, this is considered 'casual' by
+		Gamers' Standards.
+	</p>
+	<p>
+		How is this possible? Well, video games are fun, and homework is boring. That's why after our team had been
+		procrastinating on work by <a href = http://orteil.dashnet.org/cookieclicker/ target="_blank">clicking cookies</a>
+		for about an hour, we came to realize the potential of video games. If we could design an addictive piece of software
+		that teaches people about music, we would be helping out aspiring musicians worldwide (and making it rain $$$)!
+	</p>
+	<div class = "center">
+		<iframe width="560" height="315"  align="middle"
+			src="https://www.youtube.com/embed/73db1Wp8fBg" 
+			frameborder="0" allowfullscreen>
+		</iframe>
+	</div>
+	<p>
+		Dubbed as 'Name of Game' because we never agreed on a name, our team tried to develop a game with similar incremental
+		mechanics like the cookie clicking game. A musical note will be played, and the user has to press the corresponding note 
+		on the piano interface. Doing so successfully will increment the user's points, which they can proceed to unlock more notes
+		and extra features.
+	</p>
+	<p>
+		It is currently a work in progress, so stay tuned for further updates!
+	</p>
+</div>
+
+<div id="Biophysics" class="tabcontent">
+  <h2>Research in Amyloidogenic Protein using the Dielectric Relaxation Spectroscopy Method</h2>
+	<p> When I tell my peers that my research was in bio-physics, they give me a bewildered look and ask me "aren't you a computer
+	science major?". At first glance it does not make much sense to be doing research in a field unrelated to my major. However, by 
+	doing research in a different field, I could offer a valuable technique that may be unknown to the research of a given field.  
+	My expertise in script-coding and data-mining was put to good use in analyzing the heaps of data that Professor Izabela Stroe
+	collected with the Dielectric Relaxation Spectroscopy Method. 
+	</p> 
+	<img src = "images/experiment_biophysics.jpg" width="400" height="400"/>
+	<p> For a more technical detail of the analysis that our lab has been doing, we use the Dielectric Relaxation Spectroscopy Method
+	to analyze amyloidogenic protein. This is achieved by putting the protein sample in the capacitor to alter its permittivity. Then,
+	alternating current of varying frequencies is sent through the capacitor, which is measured by the NOVOCONTROL Spectrometer.
+	</p>
+	<p>I have also had the opportunity to work with Professor David Turton of the University of Glassgow to modify an igor procedure 
+	file that he has developed in order to analyze the relaxations peak.
+	</p>
+	<img src = "images/graphs.jpg" width="593" height="341"/>
+	<p> As of the time of writing, we have analyzed Amyloid-Beta 1-42 Protein, believed to be responsible for Alzhiemers Disease, in 
+	Bovine Serum Albumin. We are moving on to measure Amyloid-Beta Scrambled 1-42 in the same conditions, and then to compare results. 
+	</p>
+</div>
+
+<div id="Teaching" class="tabcontent">
+	<h2>The Teaching Life</h2>
+	<p> Teaching mathematics and science is my gig. There was always the sense of accomplishment when I could make my peers to achieve 
+	the 'Aha!' moment. I also found that by explaining verbally, I would be able to understand the concept more deeply.
+	That's why after graduating from high-school I started a part-time job teaching at a school's dormitory and a son
+	of a helicopter mom. 
+	</p>
+	<p> In the school's dormitory, I continue to spark the 'Aha!' moments with my students. However, with the helicopter mom's son,
+	I will call him John, things were a little different. His life was one huge schedule, forced to work like a robot. He acted out
+	when he could, a futile attempt at rebelling against the world around him.
+	</p>
+	<p> That was when my role as a teacher changed. It was more than just explaining concepts. I wanted John to know the joy of just 
+	having fun and screwing around. I tried to make the lessons we had more than just me explaining, but a chance for him to hang out with
+	a friend. We would go on 'discovery journeys' on the internet, and I tried my best to inspire him to come to love and enjoy math and 
+	science.
+	</p>
+	<img src = "images/teaching.jpg" width="360" height="480" >	
+	<p> As of now, I work in Worcester Polytechnic Institute's Math Department as a Peer Learning Assistant and the Computer Science
+	Department as a Senior Assistant. I have taught Calculus I, Calculus III, Differential Equations, Probability, and Machine Organization
+	and Assembly in my 2 years.
+	</p>
+</div>
+
+<div id="Robots" class="tabcontent">
+<h2> Robots </h2>
+<h3> RBE 1001 </h3>
+<p>It's the last semester of college freshmen year. You're completely new to this whole robotics competition thing, and you are facing 
+ against FIRST Robotics veterans, so you have to make up for it by doubling the effort.</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/QbbIlPCd_G8" frameborder="0" allowfullscreen></iframe>
+<p>We got second place with SkRap (Robot in video above), so that was pretty nice </p>
+<h3> RBE 2001 </h3>
+<p>It's the Ghost from Pacman!</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/O36wjBkZDUM" frameborder="0" allowfullscreen></iframe>
+<h3> RBE 2002 </h3>
+<p> Then along comes the third season . Other classes have been pounding on you like crazy. You've got 4 days to complete the 
+<a href="http://www.trinityrobotcontest.org/"> firefighting robot challenge </a> so you do what you gotta do: Pull three all nighters in a row.
+</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/NpgOjUz64bc" frameborder="0" allowfullscreen></iframe>
+<p> We did get it to work, however the battery went haywire during the actual challenege, so we cried for days. </p>
+<img src = images/yil_and_i.jpg width="270" height="480"></img>
+</div>
+
+<div id="FPiano" class="tabcontent">
+		<h1> check out the Other Stuff Tab </h1>
+		<p> And make sure you have https:// in front of the website. </p>
+		<p> and make sure you have a microphone </p>
+		<p> and that you can actually whistle :3 </p>
+		<img src = images/under_construction.jpg >
+		<p> I love KARE RAISU </p>
+</div>
+
+<script>
+function openTab(evt, cityName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(cityName).style.display = "block";
+    evt.currentTarget.className += " active";
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
+     
+</body>
+</html> 
