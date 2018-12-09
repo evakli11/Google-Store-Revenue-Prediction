@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<!-- saved from url=(0035)https://bhonris.github.io/CS539_ML/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <style>
 	body{font-family: "Lato", sans-serif; background-color: white;}
 	
@@ -8,12 +8,12 @@
 div.tab{
 	overflow: hidden;
 	border: 1px solid #ccc;
-	background-color: #f1f1f1;
+	background-color: #f1f1f1; margin-top: 100px
 }
 	  
 .fa-github {
   background: #dd4b39;
-  color: white;
+  color: black;
 }
 
 div.title {
@@ -21,7 +21,7 @@ div.title {
   background-color: #333;
   /*position: fixed;*/
   top: 0;
-  width: 100%;
+  height: 210px; width: 100%;
   text-indent: 10px;
   z-index: 2000000;
   display: inline-block; 
@@ -30,7 +30,7 @@ div.title {
 div.title > h1 { display: inline-block; }
 div.title span { 
 	margin-left: 20px;
-	color: white
+	
 }
 	
 	/*Button Style*/
@@ -98,56 +98,44 @@ div.tab button {
 		<title>CS539 Machine Learning Project</title>
 	
 	</head>
-	<body bgcolor=white>
+	<body bgcolor="white">
 		
-		<a href="https://github.com/bhonris" class="fa fa-github" target = "_blank"></a>
+		<a href="https://github.com/bhonris" class="fa fa-github" target="_blank"></a>
 		
-		<div class = "title" style="background-image: url('pages/images/sales_picture.jpg');">
-			<h1>Who's Paying? </h1>
-			<span>
-				A Joint Classification-Regression Model for Predicting Customer Revenue
-			</span>
-			<img src=pages/images/sales_picture.jpg></img>
-			<div class = "tab" >
-			<button class = "tablinks active" onclick="openTab(event, 'Home')" id="defaultOpen">Home</button>
-			<button class = "tablinks" onclick="openTab(event, 'data')">Data</button>
-			<button class = "tablinks" onclick="openTab(event, 'visit')">Visit-Based Model</button>
-			<button class = "tablinks" onclick="openTab(event, 'customer')">Customer-Based Model</button>
-			<button class = "tablinks" onclick="openTab(event, 'reference')">References and Acknowledgements</button>
+		<div class="title" style="background-image: url(&#39;pages/images/sales_picture.jpg&#39;); background-position: right center">
+			<h1 style="color:black; font-size:100px">Who's Paying? </h1>
+			<span></span>
+			<img>
+			<div class="tab">
+			<button class="tablinks active" onclick="openTab(event, &#39;Home&#39;)" id="defaultOpen">Home</button>
+			<button class="tablinks" onclick="openTab(event, &#39;data&#39;)">Data</button>
+			<button class="tablinks" onclick="openTab(event, &#39;visit&#39;)">Visit-Based Model</button>
+			<button class="tablinks" onclick="openTab(event, &#39;customer&#39;)">Customer-Based Model</button>
+			<button class="tablinks" onclick="openTab(event, &#39;reference&#39;)">References and Acknowledgements</button>
 			</div>
 		</div>
 
-		<div id = "Home" class="tabcontent">
-			<iframe style="border: 0; position:absolute; width:100%; height:85%;" 
-				src="pages/home.html" 
-				frameborder="0">
+		<div id="Home" class="tabcontent" style="display: block;">
+			<iframe style="border: 0; position:absolute; width:100%; height:85%;" src="./CS539 Machine Learning Project_files/home.html" frameborder="0">
 			</iframe>
 		</div>
-		<div id = "data" class="tabcontent">
-			<iframe style="border: 0; position:absolute; width:100%; height:85%; width: 80%" 
-				src="pages/data.html" 
-				frameborder="0">
+		<div id="data" class="tabcontent" style="display: none;">
+			<iframe style="border: 0; position:absolute; width:100%; height:85%; width: 80%" src="./CS539 Machine Learning Project_files/data.html" frameborder="0">
 			</iframe>
 		</div>
 		
-		<div id = "visit" class="tabcontent" style = "  box-sixing: border-box;">
-			<iframe style="border: 0; position:absolute; width:100%; height:85%;" 
-				src="pages/visit_based_model.html" 
-				frameborder="0">
+		<div id="visit" class="tabcontent" style="display: none;">
+			<iframe style="border: 0; position:absolute; width:100%; height:85%;" src="./CS539 Machine Learning Project_files/visit_based_model.html" frameborder="0">
 			</iframe>
 		</div>
 
-		<div id = "customer" class="tabcontent">
-			<iframe style="border: 0; position:absolute; width:100%; height:85%; width: 80%" 
-				src="pages/customer_based_model.html" 
-				frameborder="0">
+		<div id="customer" class="tabcontent" style="display: none;">
+			<iframe style="border: 0; position:absolute; width:100%; height:85%; width: 80%" src="./CS539 Machine Learning Project_files/customer_based_model.html" frameborder="0">
 			</iframe>
 		</div>
 		
-		<div id = "reference" class="tabcontent">
-			<iframe style="border: 0; position:absolute; width:100%; height:85%; width: 80%" 
-				src="pages/reference.html" 
-				frameborder="0">
+		<div id="reference" class="tabcontent" style="display: none;">
+			<iframe style="border: 0; position:absolute; width:100%; height:85%; width: 80%" src="./CS539 Machine Learning Project_files/reference.html" frameborder="0">
 			</iframe>
 		</div>
 		
@@ -169,5 +157,6 @@ div.tab button {
 	// Get the element with id="defaultOpen" and click on it
 	document.getElementById("defaultOpen").click();
 	</script>
-	</body>
-</html>
+	
+
+</body></html>
