@@ -105,6 +105,7 @@ div.tab button.active {
 </div>
 
 <div id="customer" class="tabcontent">
+    <h3> Source Code </h3>
         <div style="height:auto;width:850px;overflow:auto;">
                 <pre><code class="python">
                 
@@ -304,13 +305,15 @@ div.tab button.active {
                                 self.hidden_size_reg = param_reg['hidden_size']
                                 self.output_size_reg = param_reg['output_size']
                                 self.seq_len = seq_len
-                                self.rnn_reg = nn.LSTM(input_size=self.input_size_reg, hidden_size=self.hidden_size_reg, num_layers=self.num_layers_reg)
+                                self.rnn_reg = nn.LSTM(input_size=self.input_size_reg, 
+                                                        hidden_size=self.hidden_size_reg, 
+                                                        num_layers=self.num_layers_reg)
                                 self.linear_reg = nn.Linear(self.hidden_size_reg, 1)
                                 self.mseloss = nn.MSELoss()
                                 
                             def forward(self, input_data, label_cf, label_reg):
                                 # -- weighted CF
-                                self.h0_cf = autograd.Variable(torch.randn(self.num_layers_cf , self.batchsize_cf , self.hidden_size_cf)) # (num_layers, batch, hidden_size)
+                                self.h0_cf = autograd.Variable(torch.randn(self.num_layers_cf , self.batchsize_cf , self.hidden_size_cf))
                                 self.c0_cf = autograd.Variable(torch.randn(self.num_layers_cf , self.batchsize_cf , self.hidden_size_cf))
                                 self.output_cf, self.hn_cf = self.rnn_cf(input_data, (self.h0_cf, self.c0_cf))
                                 self.last_hidden_cf = self.output_cf[-1]
@@ -318,7 +321,7 @@ div.tab button.active {
                                 self.y_hat_cf = self.softmax_cf(self.h_cf)
                                 self.loss_cf = self.crossENTloss(self.y_hat_cf, label_cf)
                                 # -- regression
-                                self.h0_reg = autograd.Variable(torch.randn(self.num_layers_reg, self.batchsize_reg, self.hidden_size_reg)) # (num_layers, batch, hidden_size)
+                                self.h0_reg = autograd.Variable(torch.randn(self.num_layers_reg, self.batchsize_reg, self.hidden_size_reg)) 
                                 self.c0_reg = autograd.Variable(torch.randn(self.num_layers_reg, self.batchsize_reg, self.hidden_size_reg))
                                 self.output_reg, self.hn_reg = self.rnn_reg(input_data, (self.h0_reg, self.c0_reg))
                                 self.last_hidden_reg = self.output_reg[-1]
@@ -336,8 +339,12 @@ div.tab button.active {
                             model = weightedCF_rnn(seq_len, no_class, param_cf, param_reg)
                             optimizer = optim.SGD(model.parameters(), lr=lr)
                             losses = []
-                            iterative = train_sample//batchsize if train_sample/batchsize == int(train_sample//batchsize) else train_sample//batchsize + 1 
-                            iter_test = test_sample//batchsize if test_sample/batchsize == int(test_sample//batchsize) else test_sample//batchsize + 1
+                            iterative = 
+                                train_sample//batchsize if train_sample/batchsize 
+                                == int(train_sample//batchsize) else train_sample//batchsize + 1 
+                            iter_test = 
+                                test_sample//batchsize if test_sample/batchsize 
+                                == int(test_sample//batchsize) else test_sample//batchsize + 1
                             train_mse = []
                             train_rmse = []
                             test_mse = []
@@ -477,7 +484,9 @@ div.tab button.active {
                             train_df = train.iloc[:(train.shape[0] - train.shape[0]%batchsize),:]
                             test_df = val.iloc[:(val.shape[0] - val.shape[0]%batchsize),:]
                         
-                            losses, train_mse, train_rmse, test_mse, test_rmse = run_trainer(train_df, test_df, num_layers, input_size, hidden_size, output_size, seq_len, epoch_num, batchsize, lr)
+                            losses, train_mse, train_rmse, test_mse, test_rmse = 
+                                run_trainer(train_df, test_df, num_layers, input_size, 
+                                                        hidden_size, output_size, seq_len, epoch_num, batchsize, lr)
                         
                             cv_train_mse.append(train_mse)
                             cv_train_rmse.append(train_rmse)
