@@ -4,7 +4,7 @@ Machine Learning Project
 git clone CS539_ML to preferred directory
 
 ## Requirements
-Make sure that processed_train_df.csv and rnn_train.csv is in the same directory.
+Make sure that processed_train_df.csv and rnn_train.csv is in the same directory. The data can be found at https://drive.google.com/drive/folders/1CP4uT9kd24L2ACueXX4nvA7YnJDVVXc1
 
 ## Running Customer-Based Model (RNN - Weighted Classified Subnetwork for Regression)
 On bash, run python customer_based_model.py in the directory
