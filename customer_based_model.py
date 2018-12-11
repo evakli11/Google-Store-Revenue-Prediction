@@ -300,10 +300,7 @@ def train_rnnCF(train_df, test_df, seq_len, epoch_num, lr, no_class, param_cf, p
 
 ### read file
 processed_train_df = pd.read_csv("processed_train_df.csv", dtype={'fullVisitorId': 'str'})
-processed_test_df = pd.read_csv("processed_test_df.csv", dtype={'fullVisitorId': 'str'})
 processed_train_df = processed_train_df.drop('Unnamed: 0', axis=1)
-processed_test_df = processed_test_df.drop('Unnamed: 0', axis=1)
-
 
 ### 5-fold
 unique_visitorId = processed_train_df['fullVisitorId'].unique()
