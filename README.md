@@ -6,7 +6,7 @@ git clone CS539_ML to preferred directory
 ## Requirements
 Make sure that processed_train_df.csv and rnn_train.csv is in the same directory.
 
-## Customer-Based Model (RNN - Weighted Classified Subnetwork for Regression)
+## Running Customer-Based Model (RNN - Weighted Classified Subnetwork for Regression)
 On bash, run python customer_based_model.py in the directory
 
 ## Running Visit-based Model (Pre-classified_Regression)
