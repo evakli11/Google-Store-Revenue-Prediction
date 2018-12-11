@@ -132,27 +132,31 @@ pre {
 	<p> Including baselines and the proposed model - Pre-classified Regression </p>
 	<div style="height:auto;width:850px;overflow:auto;"> 
             <pre><code class="python">
-                    
+        # coding: utf-8
+
 	import numpy as np # linear algebra
 	import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 	import random
 	from sklearn.metrics import mean_squared_error
 
 
-	# import data sets
+
+	# Import data sets
+
 	processed_train_df = pd.read_csv("/Users/ying/2018Fall/CS539/Project/CS539_ML-master-2/processed_train_df.csv", dtype={'fullVisitorId': 'str'})
-	processed_test_df = pd.read_csv("/Users/ying/2018Fall/CS539/Project/CS539_ML-master-2/processed_test_df.csv", dtype={'fullVisitorId': 'str'})
 
 
-	# drop the index column
+
+	# Drop the index column
+
 	processed_train_df = processed_train_df.drop('Unnamed: 0', axis=1)
-	processed_test_df = processed_test_df.drop('Unnamed: 0', axis=1)
-
 	print("Train DataFrame Shape: " + str(processed_train_df.shape))
 	processed_train_df.head()
-	
-	
-	# -- Utilities --
+
+
+
+	# Utilities 
+
 	# 5-fold cross validation 
 
 	unique_visitorId = processed_train_df['fullVisitorId'].unique()
@@ -164,11 +168,12 @@ pre {
 	fold = 5
 	id_cv = []
 	for i in range(fold):
-	    if i < fold-1:
+	    if i<fold-1:
 		cur_cv = unique_visitorId[i*(no_cust//5):(i+1)*(no_cust//5)]
 	    else:
 		cur_cv = unique_visitorId[i*(no_cust//5):no_cust]
-	    id_cv.append(cur_cv)
+	    id_cv.append(cur_cv)  
+
 
 
 	# Calculate RMSE based on the natural log of the predicted revenue for a customer.
@@ -192,8 +197,8 @@ pre {
 	    y_tr = list(y_train_sumrev['totals.transactionRevenue'])
 
 	    mse_tr = mean_squared_error(y_tr, y_tr_pred)
-	    #print('train_mse', mse_tr)
-	    #print('train_rmse', np.sqrt(mse_tr))
+	    print('train_mse', mse_tr)
+	    print('train_rmse', np.sqrt(mse_tr))
 
 	    revenue = np.exp(log_y_val_pred) - 1
 	    id_list = list(val['fullVisitorId'])
@@ -209,6 +214,7 @@ pre {
 	    y_val_sumrev = pd.DataFrame(val.groupby('fullVisitorId')["totals.transactionRevenue"].sum().reset_index())
 	    y_val_sumrev['totals.transactionRevenue'] = np.log1p(y_val_sumrev['totals.transactionRevenue'])
 	    y_val = list(y_val_sumrev['totals.transactionRevenue'])
+
 	    mse_val = mean_squared_error(y_val, y_val_pred)
 
 	    print('val_mse', mse_val)
@@ -216,34 +222,9 @@ pre {
 	    return mse_tr, mse_val
 
 
-	# predict testset and save the results as a file
 
-	def testset_pred(model, filename):
-	    x_tr = processed_train_df.iloc[:,2:]
-	    y_tr = processed_train_df.iloc[:,1]
-	    log_y_tr = np.log1p(y_tr)
-	    model.fit(x_tr, log_y_tr)
+	# Baseline1 -- Linear Regression 
 
-	    x_te = processed_test_df.iloc[:,1:]
-	    te_id = processed_test_df.iloc[:,0]
-	    y_te_pred = model.predict(x_te)
-	    y_te_pred =[0 if i < 0 else i for i in y_te_pred]
-	    revenue = np.exp(y_te_pred) - 1
-
-	    # Write submit file
-	    d = {'fullVisitorId':te_id, 'PredictedLogRevenue':revenue}
-	    submit = pd.DataFrame(data=d)
-	    col = ['fullVisitorId', 'PredictedLogRevenue']
-	    submit = submit[col]
-	    submit = pd.DataFrame(submit.groupby('fullVisitorId')["PredictedLogRevenue"].sum().reset_index())
-	    submit['PredictedLogRevenue'] = np.log1p(submit['PredictedLogRevenue'])
-	    print(submit.shape)
-	    submit.head()
-	    submit.to_csv(filename+'.csv', index=False)
-
-
-	# -- Baseline1 -- Linear Regression --
-	
 	from sklearn.metrics import mean_squared_error
 	from sklearn.linear_model import LinearRegression
 
@@ -286,8 +267,9 @@ pre {
 	print('val_rmse_5fold', np.mean(val_rmse))
 
 
-	# -- Baseline2 -- Polynomial Regression --
-	
+
+	# Baseline2 -- Polynomial Regression
+
 	from sklearn.pipeline import Pipeline
 	from sklearn.preprocessing import PolynomialFeatures
 
@@ -332,10 +314,10 @@ pre {
 	print('val_rmse_5fold', np.mean(val_rmse))
 
 
-	# -- Baseline3 -- Regression Tree --
-	
+
+	# Baseline3 -- Regression Tree
+
 	from sklearn.tree import DecisionTreeRegressor
-	import matplotlib.pyplot as plt
 
 	train_mse = []
 	train_rmse = []
@@ -377,11 +359,14 @@ pre {
 	print('val_rmse_5fold', np.mean(val_rmse))
 
 
-	# -- Proposed method -- Preclassed Regression --
-	
+
+	# Pre-classed Regression
+
 	# Add classification lables: nonzero-revenue as "1"; zero-revenue as "0"
 	processed_train_df['clf_label'] = np.where(processed_train_df['totals.transactionRevenue']==0.0, 0, 1)
 	processed_train_df.head()
+
+	# Model Implementation
 	from sklearn.linear_model import LinearRegression
 	from sklearn.linear_model import LogisticRegression
 	from sklearn.ensemble import RandomForestClassifier
@@ -422,11 +407,11 @@ pre {
 	    nonzero_index_val = []
 
 	    # ----- Insert Classification Model Here-----
-	    
+
 	    model = DecisionTreeClassifier(max_depth=8)
 	    # model = RandomForestClassifier(n_estimators=150, max_depth=15)
 	    # model = LogisticRegression(class_weight="balanced", solver='liblinear')
-	    
+
 	    # -------------------------------------------
 
 	    model.fit(x_tr, y_clf_tr)   
@@ -458,18 +443,19 @@ pre {
 	    log_y_tr1 = np.log1p(y_tr1)
 
 	    # ----- Insert Regression Model Here-----
-	    
+
 	    model = DecisionTreeRegressor(max_depth=8).fit(x_tr1, log_y_tr1)
 	    # model_pipeline = Pipeline([('poly',PolynomialFeatures(degree=2)),
-	    #                            ('linear', LinearRegression(fit_intercept=False))])
+	    #               ('linear', LinearRegression(fit_intercept=False))])
 	    # model = model_pipeline.fit(x_tr1, log_y_tr1)
 	    # model = LinearRegression().fit(x_tr1, log_y_tr1)
-	    
+
 	    # ---------------------------------------
 
 	    log_y_tr_pred = model.predict(x_regr_tr)
 	    tr_pred = list(0 for i in range(len(x_tr)))
 	    num = 0
+
 	    for index in nonzero_index_tr:
 		tr_pred[index] = log_y_tr_pred[num]
 		num += 1
@@ -478,6 +464,7 @@ pre {
 	    log_y_val_pred = model.predict(x_regr_val)
 	    val_pred = list(0 for i in range(len(x_val)))
 	    num = 0
+
 	    for index in nonzero_index_val:
 		val_pred[index] = log_y_val_pred[num]
 		num += 1
@@ -491,12 +478,10 @@ pre {
 
 
 	print('\n\nAverage:')
-	print('train_mse_5fold', np.mean(train_mse))
-	print('train_rmse_5fold', np.mean(train_rmse))
 	print('val_mse_5fold', np.mean(val_mse))
 	print('val_rmse_5fold', np.mean(val_rmse))
-		    
-		   
+	
+	
             </code></pre>
         </div>  
 </div>
