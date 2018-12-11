@@ -18,20 +18,20 @@
 		<h1>Data</h1>
 
 		<p>
-			The dataset is provided by Kaggle competition(https://www.kaggle.com/c/ga-customer-revenue-prediction/). 
-			The time span is one year. </br>
+			The dataset is provided by Kaggle competition(https://www.kaggle.com/c/ga-customer-revenue-prediction/). <br />
+			The time span is one year. <br />
 			There are 55 features in the dataset excluding target feature. There are only 3 numerical features and the number 
 			of values in some categorical columns can be over 1000. Laber encoder was used to deal with these categorical features.
 			Also, one hot encoder and hashed encoder were tried. However, the model didn't tell a significant improvement while 
-			the demension of data significantly increased.
-			Based on proposed models, the dataset was processed in two different ways:
+			the demension of data significantly increased.<br />
+			Based on proposed models, the dataset was processed in two different ways:<br />
 			Firstly, the dataset was processed based on visit. There are 903,653 visiting records. ANOVA was applied to reduce the 
 			number of features from 55 to 20. The target feature, transcation revenue, is very skewed. It is noticeable that only 
-			1.3 % of the visiting records contian non-zero value. Log transformation was applied on the target feature.
+			1.3 % of the visiting records contian non-zero value. Log transformation was applied on the target feature.<br />
 			Secondly, the dataset is processed based on customer. Some customers visit more than one time, so the sequential 
 			information should be taken into consideration. There are 714,167 customers in total. The data point should be the 
 			collection of their every single visiting record and the elements in the collection like X1, X2 shoule be same with the 
-			data point in visit based data. Accordingly, the target feature should be the log of total revenue made by each customer.
+			data point in visit based data. Accordingly, the target feature should be the log of total revenue made by each customer.<br />
 		
 		</p>
 		<img src = images/AllData.png width="80%"> </img>
