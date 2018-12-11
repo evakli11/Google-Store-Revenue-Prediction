@@ -4,15 +4,14 @@
 <style>
 * {box-sizing: border-box}
 body {
-	font-family: "Lato", 
-	sans-serif;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 	background-color: white;
 }
 /* Style the tab */
 div.tab {
     float: left;
     border: 1px solid #ccc;
-    background-color: #fffff;
+    background-color: #ffffff;
     width: 20%;
     height: 95%;
 	position: fixed;
@@ -106,8 +105,8 @@ div.tab button.active {
 
 <div id="customer" class="tabcontent">
     <h3> Source Code </h3>
-        <div style="height:auto;width:850px;overflow:auto;">
-                <pre><code class="python">
+        <div style="width:100%;width:850px;overflow:auto;">
+                <pre style="width:80%"><code class="python">
                 
                         import matplotlib.pyplot as plt 
                         plt.switch_backend('agg')
@@ -133,7 +132,9 @@ div.tab button.active {
                         
                         
                         class get_plot:
-                            def __init__(self, method, data, exp, plot_loss, losses, plot_acc, train_acc_ep, test_acc_ep):
+                            
+                        def __init__(self, method, data, exp, plot_loss, losses, plot_acc, train_acc_ep, 
+                            test_acc_ep):
                                 self.method = method
                                 self.data = data
                                 self.exp = exp 
@@ -150,7 +151,8 @@ div.tab button.active {
                                     plt.ylabel('loss_'+self.method)
                                     plt.xlabel('epoch')
                                     plt.show()
-                                    self.plt_name = "result_Main"+self.data+"_Ex"+ str(self.exp)+"_Loss"+self.method+".png"
+                                    self.plt_name = "result_Main"+self.data+"_Ex"+ str(self.exp)+"_Loss"
+                                            +　self.method+".png"
                                     plt.savefig(self.plt_name, bbox_inches='tight')
                                     plt.clf()
                                 if self.plot_acc:
@@ -162,7 +164,8 @@ div.tab button.active {
                                     plt.ylabel('RMSE')
                                     plt.xlabel('epoch')
                                     plt.show()
-                                    self.plt_name = "result_Main"+self.data+"_Ex"+ str(self.exp)+"_RMSE"+self.method+".png"
+                                    self.plt_name = "result_Main"+self.data+"_Ex"+ str(self.exp)+"_RMSE"  
+                                              +　self.method+".png"
                                     plt.savefig(self.plt_name, bbox_inches='tight')
                         
                         
@@ -189,7 +192,8 @@ div.tab button.active {
                         
                         
                         class LSTMmodel(nn.Module):
-                            def __init__(self, num_layers, input_size, batchsize, hidden_size, output_size, seq_len):
+                            def __init__(self, num_layers, input_size, batchsize, hidden_size, output_size,
+                                    seq_len):
                                 super(LSTMmodel, self).__init__()
                                 torch.manual_seed(1)
                                 self.num_layers = num_layers
@@ -198,27 +202,34 @@ div.tab button.active {
                                 self.hidden_size = hidden_size
                                 self.output_size = output_size
                                 self.seq_len = seq_len
-                                self.rnn = nn.LSTM(input_size=input_size, hidden_size=hidden_size, num_layers=num_layers)
+                                self.rnn = nn.LSTM(input_size=input_size, hidden_size=hidden_size, 
+                                        num_layers=num_layers)
                                 self.linear = nn.Linear(hidden_size, 1)
                         
                             def forward(self, input_data):
-                                self.h0 = autograd.Variable(torch.randn(self.num_layers, self.batchsize, self.hidden_size)) 
-                                self.c0 = autograd.Variable(torch.randn(self.num_layers, self.batchsize, self.hidden_size))
+                                self.h0 = autograd.Variable(torch.randn(self.num_layers, self.batchsize, 
+                                self.hidden_size)) 
+                                self.c0 = autograd.Variable(torch.randn(self.num_layers, self.batchsize, 
+                                self.hidden_size))
                                 self.output, self.hn = self.rnn(input_data, (self.h0, self.c0))
                                 self.last_hidden = self.output[-1]
                                 self.y_hat = self.linear(self.last_hidden)
                                 return self.y_hat
                         
                         
-                        def run_trainer(train_df,test_df,num_layers,input_size,hidden_size,output_size,seq_len,epoch_num,batchsize,lr):
+                        def run_trainer(train_df,test_df,num_layers,input_size,hidden_size,output_size,
+                                    seq_len,epoch_num,batchsize,lr):
                             train_sample = len(train_df)
                             test_sample = len(test_df)
-                            model = LSTMmodel(num_layers, input_size, batchsize, hidden_size, output_size, seq_len)
+                            model = LSTMmodel(num_layers, input_size, batchsize, hidden_size, output_size, 
+                            seq_len)
                             loss_fn = nn.MSELoss()
                             optimizer = optim.SGD(model.parameters(), lr=lr)
                             losses = []
-                            iterative = train_sample//batchsize if train_sample/batchsize == int(train_sample//batchsize) else train_sample//batchsize + 1
-                            iter_test = test_sample//batchsize if test_sample/batchsize == int(test_sample//batchsize) else test_sample//batchsize + 1
+                            iterative = train_sample//batchsize if train_sample/batchsize
+                                == int(train_sample//batchsize) else train_sample//batchsize + 1
+                            iter_test = test_sample//batchsize if test_sample/batchsize
+                                == int(test_sample//batchsize) else test_sample//batchsize + 1
                             train_mse = []
                             train_rmse = []
                             test_mse = []
@@ -233,49 +244,62 @@ div.tab button.active {
                                 train_df_shuffle = train_df.sample(frac=1)
                                 np.array(train_df)[:,1]
                                 for j in range(0,iterative-1):
-                                    batch = train_df_shuffle.iloc[(batchsize*j):min(batchsize*(j+1),train_sample),:]
+                                    batch = train_df_shuffle.iloc[(batchsize*j):min(batchsize*(j+1),
+                                    train_sample),:]
                                     batch_input = batch['combine']
                                     batch_label = batch['totals.transactionRevenue']
                                     batch_input = np.array([i for i in batch_input.values])
                                     batch_input.shape
                                     batch_input = np.transpose(batch_input,(1,0,2))
-                                    tf_input = autograd.Variable(torch.FloatTensor(batch_input), requires_grad=True)
+                                    tf_input = autograd.Variable(torch.FloatTensor(batch_input), 
+                                    requires_grad=True)
                                     model.zero_grad()
                                     yhat = model.forward(tf_input)
-                                    batch_label = np.array([i for i in batch_label.values]).reshape((batchsize,1))
+                                    batch_label = np.array([i for i in batch_label.values]).reshape(
+                                        (batchsize,1))
                                     tf_label = autograd.Variable(torch.FloatTensor(batch_label))
                                     loss = loss_fn(yhat,tf_label)
                                     loss.backward()
                                     optimizer.step()
                                     epoch_loss += float(loss.data)
-                                    train_preds = np.concatenate((train_preds,yhat.view(-1).detach().numpy()), axis=0)
+                                    train_preds = np.concatenate((train_preds,yhat.view(-1).detach().numpy
+                                    ()), axis=0)
                                     if j == 0: train_y = tf_label.view(-1).detach().numpy()
-                                    else: train_y = np.concatenate((train_y,tf_label.view(-1).detach().numpy()), axis=0)
+                                    else: train_y = np.concatenate((train_y,tf_label.view(-1).detach()  
+                                    .numpy()), axis=0)
                                 losses.append(epoch_loss)
                                 if verbose: print('epoch_loss', np.round(epoch_loss,4), end=' ')
                                
                                 # --- epoch MSE training
                                 train_mse.append(mean_squared_error(train_y,train_preds))
                                 train_rmse.append(np.sqrt(mean_squared_error(train_y,train_preds)))
-                                if verbose: print('train_rmse', np.round(np.sqrt(mean_squared_error(train_y,train_preds)),4), end=' ')
+                                if verbose: print('train_rmse', 
+                                            np.round(np.sqrt(mean_squared_error(train_y,train_preds)),4),  
+                                            end=' ')
                                 
                                 for j in range(0,iter_test):
-                                    test_batch = test_df.iloc[(batchsize*j):min(batchsize*(j+1),len(test_df))]
+                                    test_batch = test_df.iloc[(batchsize*j):min(batchsize*(j+1),len
+                                        (test_df))]
                                     test_batch_input = test_batch['combine']
                                     test_batch_label = test_batch['totals.transactionRevenue']
                                     test_batch_input = np.array([i for i in test_batch_input.values])
                                     test_batch_input = np.transpose(test_batch_input,(1,0,2))
-                                    tf_input = autograd.Variable(torch.FloatTensor(batch_input), requires_grad=True)
+                                    tf_input = autograd.Variable(torch.FloatTensor(batch_input), 
+                                        requires_grad=True)
                                     yhat = model.forward(tf_input)
-                                    test_batch_label = np.array([i for i in test_batch_label.values]).reshape((batchsize,1))
+                                    test_batch_label = np.array([i for i in test_batch_label.values])
+                                        .reshape((batchsize,1))
                                     tf_label = autograd.Variable(torch.FloatTensor(test_batch_label))
-                                    test_preds = np.concatenate((test_preds,yhat.view(-1).detach().numpy()), axis=0)
+                                    test_preds = np.concatenate((test_preds,yhat.view(-1).detach().numpy())
+                                        , axis=0)
                                     if j == 0: test_y = tf_label.view(-1).detach().numpy()
-                                    else: test_y = np.concatenate((test_y,tf_label.view(-1).detach().numpy()), axis=0)
+                                    else: test_y = np.concatenate((test_y,tf_label.view(-1).detach().numpy
+                                        ()), axis=0)
                                 # --- epoch accuracy testing
                                 test_mse.append(mean_squared_error(test_y,test_preds))
                                 test_rmse.append(np.sqrt(mean_squared_error(test_y,test_preds)))
-                                if verbose: print('test_rmse', np.round(np.sqrt(mean_squared_error(test_y,test_preds)),4))
+                                if verbose: print('test_rmse', np.round(np.sqrt(mean_squared_error(test_y,
+                                    test_preds)),4))
                             
                             return losses, train_mse, train_rmse, test_mse, test_rmse
                         
@@ -294,7 +318,9 @@ div.tab button.active {
                                 self.input_size_cf = param_cf['input_size']
                                 self.batchsize_cf = param_cf['batchsize']
                                 self.hidden_size_cf = param_cf['hidden_size']
-                                self.rnn_cf = nn.LSTM(input_size=self.input_size_cf, hidden_size=self.hidden_size_cf, num_layers=self.num_layers_cf)
+                                self.rnn_cf = nn.LSTM(input_size=self.input_size_cf, 
+                                                        hidden_size=self.hidden_size_cf, 
+                                                        num_layers=self.num_layers_cf)
                                 self.linear_cf = nn.Linear(self.hidden_size_cf, self.no_class)
                                 self.softmax_cf = nn.Softmax(dim=-1)
                                 self.crossENTloss = nn.CrossEntropyLoss()
@@ -313,17 +339,27 @@ div.tab button.active {
                                 
                             def forward(self, input_data, label_cf, label_reg):
                                 # -- weighted CF
-                                self.h0_cf = autograd.Variable(torch.randn(self.num_layers_cf , self.batchsize_cf , self.hidden_size_cf))
-                                self.c0_cf = autograd.Variable(torch.randn(self.num_layers_cf , self.batchsize_cf , self.hidden_size_cf))
-                                self.output_cf, self.hn_cf = self.rnn_cf(input_data, (self.h0_cf, self.c0_cf))
+                                self.h0_cf = autograd.Variable(torch.randn(self.num_layers_cf , 
+                                                                            self.batchsize_cf , 
+                                                                            self.hidden_size_cf))
+                                self.c0_cf = autograd.Variable(torch.randn(self.num_layers_cf ,
+                                                                            self.batchsize_cf , 
+                                                                            self.hidden_size_cf))
+                                self.output_cf, self.hn_cf = self.rnn_cf(input_data, (self.h0_cf, 
+                                    self.c0_cf))
                                 self.last_hidden_cf = self.output_cf[-1]
                                 self.h_cf = self.linear_cf(self.last_hidden_cf)
                                 self.y_hat_cf = self.softmax_cf(self.h_cf)
                                 self.loss_cf = self.crossENTloss(self.y_hat_cf, label_cf)
                                 # -- regression
-                                self.h0_reg = autograd.Variable(torch.randn(self.num_layers_reg, self.batchsize_reg, self.hidden_size_reg)) 
-                                self.c0_reg = autograd.Variable(torch.randn(self.num_layers_reg, self.batchsize_reg, self.hidden_size_reg))
-                                self.output_reg, self.hn_reg = self.rnn_reg(input_data, (self.h0_reg, self.c0_reg))
+                                self.h0_reg = autograd.Variable(torch.randn(self.num_layers_reg, 
+                                                                            self.batchsize_reg, 
+                                                                            self.hidden_size_reg)) 
+                                self.c0_reg = autograd.Variable(torch.randn(self.num_layers_reg, 
+                                                                            self.batchsize_reg, 
+                                                                            self.hidden_size_reg))
+                                self.output_reg, self.hn_reg = self.rnn_reg(input_data, (self.h0_reg, 
+                                    self.c0_reg))
                                 self.last_hidden_reg = self.output_reg[-1]
                                 self.weight = self.y_hat_cf[:,1].view(self.batchsize_cf,1)
                                 self.y_hat_reg = self.weight*self.linear_reg(self.last_hidden_reg)
@@ -332,7 +368,8 @@ div.tab button.active {
                                 self.loss = self.loss_cf + self.loss_reg
                                 return self.loss, self.y_hat_cf, self.y_hat_reg
                         
-                        def train_rnnCF(train_df, test_df, seq_len, epoch_num, lr, no_class, param_cf, param_reg):
+                        def train_rnnCF(train_df, test_df, seq_len, epoch_num, lr, no_class, param_cf, 
+                            param_reg):
                             train_sample = len(train_df)
                             test_sample = len(test_df)
                             batchsize = param_cf['batchsize']
@@ -358,66 +395,80 @@ div.tab button.active {
                                 train_df_shuffle = train_df.sample(frac=1)
                         
                                 for j in range(0,iterative-1):
-                                    batch = train_df_shuffle.iloc[(batchsize*j):min(batchsize*(j+1),train_sample),:]
+                                    batch = train_df_shuffle.iloc[(batchsize*j):min(batchsize*(j+1),
+                                        train_sample),:]
                                     batch_input = batch['combine']
                                     batch_input = np.array([i for i in batch_input.values])
                                     batch_input = np.transpose(batch_input,(1,0,2))
-                                    tf_input = autograd.Variable(torch.FloatTensor(batch_input), requires_grad=True)
+                                    tf_input = autograd.Variable(torch.FloatTensor(batch_input), 
+                                        requires_grad=True)
                                     # label
                                     batch_label = batch['totals.transactionRevenue']
-                                    batch_label_reg = np.array([i for i in batch_label.values]).reshape((batchsize,1))
+                                    batch_label_reg = np.array([i for i in batch_label.values]).reshape(
+                                            (batchsize,1))
                                     tf_label_reg = autograd.Variable(torch.FloatTensor(batch_label_reg))
                                     batch_label_cf = np.array([1 if i > 0 else 0 for i in batch_label])
                                     tf_label_cf = autograd.Variable(torch.LongTensor(batch_label_cf))
                                     
                                     model.zero_grad()
-                                    loss, y_hat_cf, y_hat_reg = model.forward(tf_input, tf_label_cf, tf_label_reg)
+                                    loss, y_hat_cf, y_hat_reg = model.forward(tf_input, tf_label_cf, 
+                                        tf_label_reg)
                                     loss.backward()
                                     optimizer.step()
                                     epoch_loss += float(loss.data)
-                                    train_preds = np.concatenate((train_preds,y_hat_reg.view(-1).detach().numpy()), axis=0)
+                                    train_preds = np.concatenate((train_preds,y_hat_reg.view(-1).detach()
+                                        .numpy()), axis=0)
                                     if j == 0: train_y = tf_label_reg.view(-1).detach().numpy()
-                                    else: train_y = np.concatenate((train_y,tf_label_reg.view(-1).detach().numpy()), axis=0) 
+                                    else: train_y = np.concatenate((train_y,tf_label_reg.view(-1).detach()
+                                        .numpy()), axis=0) 
                                 losses.append(epoch_loss)
                                 if verbose: print('epoch_loss', np.round(epoch_loss,4), end=' ')
                                 # --- epoch MSE training
                                 train_mse.append(mean_squared_error(train_y,train_preds))
                                 train_rmse.append(np.sqrt(mean_squared_error(train_y,train_preds)))
-                                if verbose: print('train_rmse', np.round(np.sqrt(mean_squared_error(train_y,train_preds)),4), end=' ')
+                                if verbose: print('train_rmse', np.round(np.sqrt(mean_squared_error
+                                    (train_y,train_preds)),4), end=' ')
                             
                                 for j in range(0,iter_test):
-                                    test_batch = test_df.iloc[(batchsize*j):min(batchsize*(j+1),test_sample),:]
+                                    test_batch = test_df.iloc[(batchsize*j):min(batchsize*(j+1),
+                                        test_sample),:]
                                     test_batch_input = test_batch['combine']
                                     test_batch_input = np.array([i for i in test_batch_input.values])
                                     test_batch_input = np.transpose(test_batch_input,(1,0,2))
-                                    test_tf_input = autograd.Variable(torch.FloatTensor(test_batch_input), requires_grad=True)
+                                    test_tf_input = autograd.Variable(torch.FloatTensor(test_batch_input), 
+                                        requires_grad=True)
                                     # label
                                     test_batch_label = test_batch['totals.transactionRevenue']
-                                    test_batch_label_reg = np.array([i for i in test_batch_label.values]).reshape((batchsize,1))
-                                    test_tf_label_reg = autograd.Variable(torch.FloatTensor(test_batch_label_reg))
-                                    test_batch_label_cf = np.array([1 if i > 0 else 0 for i in test_batch_label])
-                                    test_tf_label_cf = autograd.Variable(torch.LongTensor(test_batch_label_cf))
-                                    test_loss, test_y_hat_cf, test_y_hat_reg = model.forward(test_tf_input, test_tf_label_cf, test_tf_label_reg)
-                                    test_preds = np.concatenate((test_preds,test_y_hat_reg.view(-1).detach().numpy()), axis=0)
+                                    test_batch_label_reg = np.array([i for i in test_batch_label.values])
+                                        .reshape((batchsize,1))
+                                    test_tf_label_reg = autograd.Variable(torch.FloatTensor
+                                        (test_batch_label_reg))
+                                    test_batch_label_cf = np.array([1 if i > 0 else 0 for i in 
+                                        test_batch_label])
+                                    test_tf_label_cf = autograd.Variable(torch.LongTensor
+                                        (test_batch_label_cf))
+                                    test_loss, test_y_hat_cf, test_y_hat_reg = model.forward(test_tf_input 
+                                                                            test_tf_label_f, 
+                                                                            test_tf_label_reg)
+                                    test_preds = np.concatenate((test_preds,test_y_hat_reg.view(-1).detach
+                                        ().numpy()), axis=0)
                                     if j == 0: test_y = test_tf_label_reg.view(-1).detach().numpy()
-                                    else: test_y = np.concatenate((test_y,test_tf_label_reg.view(-1).detach().numpy()), axis=0)
+                                    else: test_y = np.concatenate((test_y,test_tf_label_reg.view(-1).detach
+                                        ().numpy()), axis=0)
                                 # --- epoch accuracy testing
                                 test_mse.append(mean_squared_error(test_y,test_preds))
                                 test_rmse.append(np.sqrt(mean_squared_error(test_y,test_preds)))
-                                if verbose: print('test_rmse', np.round(np.sqrt(mean_squared_error(test_y,test_preds)),4))
+                                if verbose: print('test_rmse', np.round(np.sqrt(mean_squared_error(test_y,
+                                    test_preds)),4))
                                 
                             return losses, train_mse, train_rmse, test_mse, test_rmse
                         
-                        
-                        
-                        
-                        
-                        #####################################################################################################################
-                        #####################################################################################################################
-                        
+
                         ### read file
-                        processed_train_df = pd.read_csv("processed_train_df.csv", dtype={'fullVisitorId': 'str'})
-                        processed_test_df = pd.read_csv("processed_test_df.csv", dtype={'fullVisitorId': 'str'})
+                        processed_train_df = pd.read_csv("processed_train_df.csv", dtype={'fullVisitorId': 
+                            'str'})
+                        processed_test_df = pd.read_csv("processed_test_df.csv", dtype={'fullVisitorId':   
+                            'str'})
                         processed_train_df = processed_train_df.drop('Unnamed: 0', axis=1)
                         processed_test_df = processed_test_df.drop('Unnamed: 0', axis=1)
                         
@@ -438,11 +489,6 @@ div.tab button.active {
                                 cur_cv = unique_visitorId[i*(no_cust//5):no_cust]
                             id_cv.append(cur_cv)   
                         
-                        
-                        
-                        #####################################################################################################################
-                        #####################################################################################################################
-                        
                         ### Vanilla RNN
                         print('\n\n\n# -- Vanilla RNN')
                         
@@ -460,12 +506,15 @@ div.tab button.active {
                         print('hidden_size',hidden_size,'num_layers',num_layers,'seq_len',seq_len)
                         
                         ### read sequential data
-                        rnn_train = pd.read_csv("rnn_train.csv", dtype={'fullVisitorId': 'str', 'combine':'object'})
+                        rnn_train = pd.read_csv("rnn_train.csv", dtype={'fullVisitorId': 'str', 
+                            'combine':'object'})
                         test_train  = rnn_train['combine'].apply(strToList)
                         rnn_train['combine'] = test_train
                         rnn_train2 = rnn_train.copy()
-                        rnn_train2['combine'] = rnn_train2['combine'].apply(lambda x: data_paddle(x,seq_len).data_pad)
-                        rnn_train2['totals.transactionRevenue'] = np.log1p(rnn_train2['totals.transactionRevenue'])
+                        rnn_train2['combine'] = rnn_train2['combine'].apply(lambda x: data_paddle(x,
+                            seq_len).data_pad)
+                        rnn_train2['totals.transactionRevenue'] = np.log1p(rnn_train2
+                            ['totals.transactionRevenue'])
                         
                         ### train model
                         cv_train_mse = []
@@ -486,7 +535,8 @@ div.tab button.active {
                         
                             losses, train_mse, train_rmse, test_mse, test_rmse = 
                                 run_trainer(train_df, test_df, num_layers, input_size, 
-                                                        hidden_size, output_size, seq_len, epoch_num, batchsize, lr)
+                                                        hidden_size, output_size, seq_len, epoch_num, 
+                                                            batchsize, lr)
                         
                             cv_train_mse.append(train_mse)
                             cv_train_rmse.append(train_rmse)
@@ -502,7 +552,8 @@ div.tab button.active {
                             loss = losses
                             train_perf = train_rmse
                             test_perf = test_rmse
-                            get_plot(plot_method, plot_data, plot_exp, plot_loss, loss, plot_acc, train_perf, test_perf)
+                            get_plot(plot_method, plot_data, plot_exp, plot_loss, loss, plot_acc, 
+                                train_perf, test_perf)
                         
                         
                         print('\nAverage:')
@@ -510,13 +561,7 @@ div.tab button.active {
                         print('train_rmse_5fold', np.mean(cv_train_rmse))
                         print('val_mse_5fold', np.mean(cv_val_mse))
                         print('val_rmse_5fold', np.mean(cv_val_rmse))
-                        
-                        
-                        
-                        
-                        #####################################################################################################################
-                        #####################################################################################################################
-                        
+
                         ### Weighted Classified Subnetwork for Regression
                         print('\n\n\n# -- Weighted Classified Subnetwork for Regression')
                         
@@ -540,15 +585,19 @@ div.tab button.active {
                         param_cf['hidden_size'] = 6
                         no_class = 2
                         
-                        print('param_reg:', param_reg,'\nparam_cf:', param_cf,'\nseq_len',seq_len,'\nepoch_num',epoch_num,'\nlr',lr)
+                        print('param_reg:', param_reg,'\nparam_cf:', param_cf,'\nseq_len',seq_len,
+                        '\nepoch_num',epoch_num,'\nlr',lr)
                         
                         ### read sequential data
-                        rnn_train = pd.read_csv("rnn_train.csv", dtype={'fullVisitorId': 'str', 'combine':'object'})
+                        rnn_train = pd.read_csv("rnn_train.csv", dtype={'fullVisitorId': 'str', 
+                            'combine':'object'})
                         test_train  = rnn_train['combine'].apply(strToList)
                         rnn_train['combine'] = test_train
                         rnn_train2 = rnn_train.copy()
-                        rnn_train2['combine'] = rnn_train2['combine'].apply(lambda x: data_paddle(x,seq_len).data_pad)
-                        rnn_train2['totals.transactionRevenue'] = np.log1p(rnn_train2['totals.transactionRevenue'])
+                        rnn_train2['combine'] = rnn_train2['combine'].apply(lambda x: data_paddle(x,
+                            seq_len).data_pad)
+                        rnn_train2['totals.transactionRevenue'] = np.log1p(rnn_train2
+                            ['totals.transactionRevenue'])
                         
                         
                         ### train model
@@ -569,7 +618,8 @@ div.tab button.active {
                             train_df = train.iloc[:(train.shape[0] - train.shape[0]%batchsize),:]
                             test_df = val.iloc[:(val.shape[0] - val.shape[0]%batchsize),:]
                         
-                            losses, train_mse, train_rmse, test_mse, test_rmse = train_rnnCF(train_df, test_df, seq_len, epoch_num, lr, no_class, param_cf, param_reg)    
+                            losses, train_mse, train_rmse, test_mse, test_rmse = train_rnnCF(train_df, 
+                                test_df, seq_len, epoch_num, lr, no_class, param_cf, param_reg)    
                         
                             cv_train_mse.append(train_mse)
                             cv_train_rmse.append(train_rmse)
@@ -585,7 +635,8 @@ div.tab button.active {
                             loss = losses
                             train_perf = train_rmse
                             test_perf = test_rmse
-                            get_plot(plot_method, plot_data, plot_exp, plot_loss, loss, plot_acc, train_perf, test_perf)
+                            get_plot(plot_method, plot_data, plot_exp, plot_loss, loss, plot_acc, 
+                                train_perf, test_perf)
                         
                         
                         print('\nAverage:')
