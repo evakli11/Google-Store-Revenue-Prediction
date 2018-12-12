@@ -101,7 +101,7 @@ pre {
 			the ground truth relationship in the dataset is non-linear.
 	</p>
 	<h3>Polynomial Regression</h3>
-	<p>Polynomial regression fits a nonlinear relationship between the value of x and the corresponding conditional mean of y. Polynomial regression will solve the issues mentioned above, but may lead to overfitting.</p>
+	<p>Polynomial regression fits a nonlinear relationship. It will solve the issues mentioned above, but may lead to overfitting.</p>
 	<h3>Regression Tree</h3>
 	  Decision Tree is also another usable state of the art algorithm for this task. Given that both 
 	  categorical and numerical features are present in the dataset, the decision tree may be more suitable
@@ -111,7 +111,16 @@ pre {
 
 <div id="propose" class="tabcontent">
   <h2>Proposed method: "Pre-classified_Regression"</h2>
-	<p> The first proposed idea is to apply a classification model before a linear regression model. The classification model is used to predict whether or not a customer will generate revenue. If the revenue is predicted as non-zero, the sample will not enter our regression model. By doing this, the large number of zero-revenue samples will not impact the training process of the regression model. We trained the classifiers and regression models separately. For classification, we applied undersampling on the training set before fitting in models. We performed Logistic Regression, Decision Tree, KNN and Support Vector Machine on the training set separately and choose the algorithm with the best performance. For regression, we applied the models we mentioned in the state-of-the-art section. The Pre-classified Regression Models were implemented using Scikit-learn in Python.
+	<p> The idea is to apply a classification model before a linear regression model. 
+		The classification model is used to predict whether or not a visit will generate revenue. 
+		If a visit is predicted as non-spender, the sample will not enter our regression model and automatically predict a zero revenue. 
+		By doing this, the large number of zero-revenue samples will be filterd. 
+		We trained the classifiers and regression models separately. 
+		For classification, we applied undersampling on the training set before fitting in models. 
+		We performed Logistic Regression, Decision Tree, KNN and Support Vector Machine on the training set separately 
+		and choose the algorithm with the best performance. 
+		For regression, we applied the models we mentioned in the state-of-the-art section. 
+		The Pre-classified Regression Models were implemented using Scikit-learn in Python.
 	</p>
 	<img src = "images/Pre-classified_Regression.png" width="80%" height="auto"/>
 </div>
