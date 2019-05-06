@@ -1,6 +1,4 @@
-# CS539_ML
-Machine Learning Project
-
+# How to set up
 git clone CS539_ML to preferred directory
 
 ## Requirements
